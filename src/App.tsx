@@ -6,7 +6,11 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { Layout } from "./components/Layout";
-import { Products } from "./pages/Products";
+import { ProductsManager } from "./pages/ProductsManager";
+import { QuotesList } from "./pages/QuotesList";
+import { QuoteBuilder } from "./pages/QuoteBuilder";
+import { AdminDashboard } from "./pages/AdminDashboard";
+import { UserSwitcher } from "./components/UserSwitcher";
 
 const queryClient = new QueryClient();
 
@@ -20,15 +24,12 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/products" element={
             <Layout>
-              <Products />
+              <ProductsManager />
             </Layout>
           } />
           <Route path="/quotes" element={
             <Layout>
-              <div className="p-8">
-                <h1 className="text-3xl font-bold">Quotes</h1>
-                <p className="text-muted-foreground">Quote management coming soon...</p>
-              </div>
+              {window.location.search.includes('edit=') ? <QuoteBuilder /> : <QuotesList />}
             </Layout>
           } />
           <Route path="/customers" element={
@@ -41,10 +42,7 @@ const App = () => (
           } />
           <Route path="/admin" element={
             <Layout>
-              <div className="p-8">
-                <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-                <p className="text-muted-foreground">Admin features coming soon...</p>
-              </div>
+              <AdminDashboard />
             </Layout>
           } />
           <Route path="/admin/users" element={

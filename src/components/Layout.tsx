@@ -2,6 +2,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
 import { Bell, User } from "lucide-react";
+import { UserSwitcher } from "./UserSwitcher";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -10,6 +11,7 @@ interface LayoutProps {
 export function Layout({ children }: LayoutProps) {
   return (
     <SidebarProvider>
+      <UserSwitcher />
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         

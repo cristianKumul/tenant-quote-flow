@@ -1,44 +1,31 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, TrendingUp, FileText, Package, Users } from "lucide-react";
+import { Plus, TrendingUp, FileText, Package, Users, DollarSign } from "lucide-react";
+import { useApp } from "../contexts/AppContext";
+import { formatCurrency } from "../utils/currency";
+import { useNavigate } from "react-router-dom";
 
 export function Dashboard() {
-  const stats = [
-    {
-      title: "Total Quotes",
-      value: "24",
-      description: "+12% from last month",
-      icon: FileText,
-      color: "text-blue-600"
-    },
-    {
-      title: "Active Products",
-      value: "127",
-      description: "+8% from last month", 
-      icon: Package,
-      color: "text-green-600"
-    },
-    {
-      title: "Customers",
-      value: "89",
-      description: "+23% from last month",
-      icon: Users,
-      color: "text-purple-600"
-    },
-    {
-      title: "Revenue",
-      value: "$24,500",
-      description: "+18% from last month",
-      icon: TrendingUp,
-      color: "text-orange-600"
-    }
-  ];
+  const { state, createQuote } = useApp();
+  const navigate = useNavigate();
 
-  const recentQuotes = [
-    { id: "Q-001", customer: "Acme Corp", amount: "$4,500", status: "PENDING", date: "2024-01-15" },
-    { id: "Q-002", customer: "TechStart Inc", amount: "$2,300", status: "IN_PROGRESS", date: "2024-01-14" },
-    { id: "Q-003", customer: "Global Solutions", amount: "$8,900", status: "COMPLETED", date: "2024-01-13" },
-  ];
+  // Calculate stats for current user
+  const userProducts = state.products.filter(p => p.userId === state.currentUser.id);
+  const userQuotes = state.quotes.filter(q => q.userId === state.currentUser.id);
+  const userCustomers = state.customers.filter(c => c.userId === state.currentUser.id);
+  
+  const totalRevenue = userQuotes
+    .filter(q => q.status === 'COMPLETED')
+    .reduce((sum, q) => sum + q.total, 0);
+    
+  const activeQuotes = userQuotes.filter(q => 
+    q.status === 'PENDING' || q.status === 'IN_PROGRESS'
+  ).length;
+
+  const handleCreateQuote = () => {
+    const quoteId = createQuote();
+    navigate(`/quotes?edit=${quoteId}`);
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -56,9 +43,9 @@ export function Dashboard() {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-muted-foreground">Welcome back! Here's what's happening with your business.</p>
+          <p className="text-muted-foreground">Welcome back, {state.currentUser.name}! Here's what's happening with your business.</p>
         </div>
-        <Button variant="professional" className="md:w-auto">
+        <Button variant="professional" className="md:w-auto" onClick={handleCreateQuote}>
           <Plus className="w-4 h-4" />
           Create Quote
         </Button>
@@ -66,22 +53,65 @@ export function Dashboard() {
 
       {/* Stats Grid */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <Card key={stat.title} className="bg-gradient-card shadow-card hover:shadow-elevated transition-smooth">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">
-                {stat.title}
-              </CardTitle>
-              <stat.icon className={`w-5 h-5 ${stat.color}`} />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-              <p className="text-xs text-muted-foreground mt-1">
-                {stat.description}
-              </p>
-            </CardContent>
-          </Card>
-        ))}
+        <Card className="bg-gradient-card shadow-card hover:shadow-elevated transition-smooth">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Revenue
+            </CardTitle>
+            <DollarSign className="w-5 h-5 text-green-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-foreground">{formatCurrency(totalRevenue)}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              From completed quotes
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-card shadow-card hover:shadow-elevated transition-smooth">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Active Quotes
+            </CardTitle>
+            <FileText className="w-5 h-5 text-blue-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-foreground">{activeQuotes}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Pending & in progress
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-card shadow-card hover:shadow-elevated transition-smooth">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Products
+            </CardTitle>
+            <Package className="w-5 h-5 text-purple-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-foreground">{userProducts.length}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              In your catalog
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-card shadow-card hover:shadow-elevated transition-smooth">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Customers
+            </CardTitle>
+            <Users className="w-5 h-5 text-orange-600" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-foreground">{userCustomers.length}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Total customers
+            </p>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Recent Activity */}
@@ -94,23 +124,26 @@ export function Dashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentQuotes.map((quote) => (
-                <div key={quote.id} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-smooth">
+              {userQuotes.slice(0, 3).map((quote) => (
+                <div key={quote.id} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-muted/50 transition-smooth cursor-pointer" onClick={() => navigate(`/quotes?edit=${quote.id}`)}>
                   <div className="space-y-1">
                     <div className="flex items-center gap-3">
-                      <span className="font-medium text-foreground">{quote.id}</span>
+                      <span className="font-medium text-foreground">{quote.quoteNumber}</span>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(quote.status)}`}>
                         {quote.status}
                       </span>
                     </div>
-                    <p className="text-sm text-muted-foreground">{quote.customer}</p>
-                    <p className="text-xs text-muted-foreground">{quote.date}</p>
+                    <p className="text-sm text-muted-foreground">{quote.customerName || 'Anonymous'}</p>
+                    <p className="text-xs text-muted-foreground">{quote.createdAt.toLocaleDateString()}</p>
                   </div>
                   <div className="text-right">
-                    <div className="font-bold text-foreground">{quote.amount}</div>
+                    <div className="font-bold text-foreground">{formatCurrency(quote.total)}</div>
                   </div>
                 </div>
               ))}
+              {userQuotes.length === 0 && (
+                <p className="text-sm text-muted-foreground">No quotes yet. Create your first quote!</p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -122,21 +155,21 @@ export function Dashboard() {
             <CardDescription>Common tasks to get you started</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/products?new=true')}>
               <Plus className="w-4 h-4" />
               Add New Product
             </Button>
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="outline" className="w-full justify-start" onClick={handleCreateQuote}>
               <FileText className="w-4 h-4" />
               Create Quote
             </Button>
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/customers?new=true')}>
               <Users className="w-4 h-4" />
               Add Customer
             </Button>
-            <Button variant="outline" className="w-full justify-start">
+            <Button variant="outline" className="w-full justify-start" onClick={() => navigate('/quotes')}>
               <TrendingUp className="w-4 h-4" />
-              View Reports
+              View All Quotes
             </Button>
           </CardContent>
         </Card>
