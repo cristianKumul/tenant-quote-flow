@@ -1,17 +1,19 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
-import { Bell, User } from "lucide-react";
-import { UserSwitcher } from "./UserSwitcher";
+import { Bell, User, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Badge } from "@/components/ui/badge";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
 export function Layout({ children }: LayoutProps) {
+  const { profile, signOut } = useAuth();
+
   return (
     <SidebarProvider>
-      <UserSwitcher />
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         
@@ -26,11 +28,22 @@ export function Layout({ children }: LayoutProps) {
             </div>
 
             <div className="flex items-center gap-4">
+              {profile && (
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium">{profile.name}</span>
+                  <Badge variant={profile.role === 'SUPERADMIN' ? 'destructive' : 'secondary'}>
+                    {profile.role}
+                  </Badge>
+                </div>
+              )}
               <Button variant="ghost" size="sm">
                 <Bell className="w-4 h-4" />
               </Button>
               <Button variant="ghost" size="sm">
                 <User className="w-4 h-4" />
+              </Button>
+              <Button variant="ghost" size="sm" onClick={signOut}>
+                <LogOut className="w-4 h-4" />
               </Button>
             </div>
           </header>
