@@ -59,7 +59,7 @@ export function QuotesList() {
       <Card className="shadow-card">
         <CardContent className="pt-6">
           <div className="flex gap-4">
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as QuoteStatus | "ALL")}>
               <SelectTrigger className="w-[200px]">
                 <SelectValue />
               </SelectTrigger>
