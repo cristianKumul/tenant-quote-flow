@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import { Layout } from "./components/Layout";
+import { Products } from "./pages/Products";
 
 const queryClient = new QueryClient();
 
@@ -16,6 +18,51 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/products" element={
+            <Layout>
+              <Products />
+            </Layout>
+          } />
+          <Route path="/quotes" element={
+            <Layout>
+              <div className="p-8">
+                <h1 className="text-3xl font-bold">Quotes</h1>
+                <p className="text-muted-foreground">Quote management coming soon...</p>
+              </div>
+            </Layout>
+          } />
+          <Route path="/customers" element={
+            <Layout>
+              <div className="p-8">
+                <h1 className="text-3xl font-bold">Customers</h1>
+                <p className="text-muted-foreground">Customer management coming soon...</p>
+              </div>
+            </Layout>
+          } />
+          <Route path="/admin" element={
+            <Layout>
+              <div className="p-8">
+                <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+                <p className="text-muted-foreground">Admin features coming soon...</p>
+              </div>
+            </Layout>
+          } />
+          <Route path="/admin/users" element={
+            <Layout>
+              <div className="p-8">
+                <h1 className="text-3xl font-bold">User Management</h1>
+                <p className="text-muted-foreground">User management coming soon...</p>
+              </div>
+            </Layout>
+          } />
+          <Route path="/settings" element={
+            <Layout>
+              <div className="p-8">
+                <h1 className="text-3xl font-bold">Settings</h1>
+                <p className="text-muted-foreground">Settings coming soon...</p>
+              </div>
+            </Layout>
+          } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
