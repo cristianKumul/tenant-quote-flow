@@ -10,7 +10,7 @@ import { ProductsManager } from "./pages/ProductsManager";
 import { QuotesList } from "./pages/QuotesList";
 import { QuoteBuilder } from "./pages/QuoteBuilder";
 import { AdminDashboard } from "./pages/AdminDashboard";
-import { UserSwitcher } from "./components/UserSwitcher";
+import { QuotesRouter } from "./pages/QuotesRouter";
 
 const queryClient = new QueryClient();
 
@@ -29,7 +29,7 @@ const App = () => (
           } />
           <Route path="/quotes" element={
             <Layout>
-              {window.location.search.includes('edit=') ? <QuoteBuilder /> : <QuotesList />}
+              <QuotesRouter />
             </Layout>
           } />
           <Route path="/customers" element={
