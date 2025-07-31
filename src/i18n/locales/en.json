@@ -1,0 +1,117 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "search": "Search",
+    "filter": "Filter",
+    "actions": "Actions",
+    "name": "Name",
+    "email": "Email",
+    "status": "Status",
+    "date": "Date",
+    "price": "Price",
+    "total": "Total",
+    "quantity": "Quantity",
+    "description": "Description"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "welcomeBack": "Welcome back",
+    "createAccount": "Create your account",
+    "signingIn": "Signing in...",
+    "signingUp": "Signing up...",
+    "invalidCredentials": "Invalid credentials",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "passwordTooShort": "Password must be at least 6 characters"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "quotes": "Quotes",
+    "customers": "Customers",
+    "admin": "Admin",
+    "users": "Users",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome to Quote Builder",
+    "subtitle": "Manage your quotes, products, and customers efficiently"
+  },
+  "products": {
+    "title": "Products",
+    "subtitle": "Manage your product catalog",
+    "addProduct": "Add Product",
+    "editProduct": "Edit Product",
+    "deleteProduct": "Delete Product",
+    "productName": "Product Name",
+    "productPrice": "Product Price",
+    "productDescription": "Product Description",
+    "noProducts": "No products found",
+    "createFirst": "Create your first product to get started"
+  },
+  "quotes": {
+    "title": "Quotes",
+    "subtitle": "Manage your quotes and proposals",
+    "newQuote": "New Quote",
+    "editQuote": "Edit Quote",
+    "deleteQuote": "Delete Quote",
+    "quoteNumber": "Quote Number",
+    "customer": "Customer",
+    "items": "Items",
+    "subtotal": "Subtotal",
+    "tax": "Tax",
+    "total": "Total",
+    "status": "Status",
+    "draft": "Draft",
+    "sent": "Sent",
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "noQuotes": "No quotes found",
+    "createFirst": "Create your first quote to get started"
+  },
+  "customers": {
+    "title": "Customers",
+    "subtitle": "Customer management coming soon..."
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "subtitle": "System overview and user management",
+    "totalUsers": "Total Users",
+    "totalProducts": "Total Products",
+    "systemStatus": "System Status",
+    "userManagement": "User Management",
+    "regularUsers": "Regular Users",
+    "toggleAccess": "Toggle Access",
+    "accessDenied": "Access Denied",
+    "superadminOnly": "Only superadmins can access this page"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Settings coming soon...",
+    "language": "Language",
+    "selectLanguage": "Select Language"
+  },
+  "errors": {
+    "404": "Page not found",
+    "404Description": "Oops! Page not found",
+    "returnHome": "Return to Home",
+    "somethingWrong": "Something went wrong",
+    "tryAgain": "Try again"
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "actions": "Acciones",
+    "name": "Nombre",
+    "email": "Correo",
+    "status": "Estado",
+    "date": "Fecha",
+    "price": "Precio",
+    "total": "Total",
+    "quantity": "Cantidad",
+    "description": "Descripción"
+  },
+  "auth": {
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar Sesión",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "noAccount": "¿No tienes una cuenta?",
+    "hasAccount": "¿Ya tienes una cuenta?",
+    "welcomeBack": "Bienvenido de nuevo",
+    "createAccount": "Crea tu cuenta",
+    "signingIn": "Iniciando sesión...",
+    "signingUp": "Registrando...",
+    "invalidCredentials": "Credenciales inválidas",
+    "emailRequired": "El correo es requerido",
+    "passwordRequired": "La contraseña es requerida",
+    "passwordTooShort": "La contraseña debe tener al menos 6 caracteres"
+  },
+  "navigation": {
+    "dashboard": "Panel",
+    "products": "Productos",
+    "quotes": "Cotizaciones",
+    "customers": "Clientes",
+    "admin": "Administrador",
+    "users": "Usuarios",
+    "settings": "Configuración"
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "welcome": "Bienvenido al Generador de Cotizaciones",
+    "subtitle": "Administra tus cotizaciones, productos y clientes de manera eficiente"
+  },
+  "products": {
+    "title": "Productos",
+    "subtitle": "Administra tu catálogo de productos",
+    "addProduct": "Agregar Producto",
+    "editProduct": "Editar Producto",
+    "deleteProduct": "Eliminar Producto",
+    "productName": "Nombre del Producto",
+    "productPrice": "Precio del Producto",
+    "productDescription": "Descripción del Producto",
+    "noProducts": "No se encontraron productos",
+    "createFirst": "Crea tu primer producto para comenzar"
+  },
+  "quotes": {
+    "title": "Cotizaciones",
+    "subtitle": "Administra tus cotizaciones y propuestas",
+    "newQuote": "Nueva Cotización",
+    "editQuote": "Editar Cotización",
+    "deleteQuote": "Eliminar Cotización",
+    "quoteNumber": "Número de Cotización",
+    "customer": "Cliente",
+    "items": "Artículos",
+    "subtotal": "Subtotal",
+    "tax": "Impuesto",
+    "total": "Total",
+    "status": "Estado",
+    "draft": "Borrador",
+    "sent": "Enviado",
+    "accepted": "Aceptado",
+    "rejected": "Rechazado",
+    "noQuotes": "No se encontraron cotizaciones",
+    "createFirst": "Crea tu primera cotización para comenzar"
+  },
+  "customers": {
+    "title": "Clientes",
+    "subtitle": "Administración de clientes próximamente..."
+  },
+  "admin": {
+    "title": "Panel de Administración",
+    "subtitle": "Resumen del sistema y gestión de usuarios",
+    "totalUsers": "Total de Usuarios",
+    "totalProducts": "Total de Productos",
+    "systemStatus": "Estado del Sistema",
+    "userManagement": "Gestión de Usuarios",
+    "regularUsers": "Usuarios Regulares",
+    "toggleAccess": "Alternar Acceso",
+    "accessDenied": "Acceso Denegado",
+    "superadminOnly": "Solo los superadministradores pueden acceder a esta página"
+  },
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Configuración próximamente...",
+    "language": "Idioma",
+    "selectLanguage": "Seleccionar Idioma"
+  },
+  "errors": {
+    "404": "Página no encontrada",
+    "404Description": "¡Ups! Página no encontrada",
+    "returnHome": "Volver al Inicio",
+    "somethingWrong": "Algo salió mal",
+    "tryAgain": "Inténtalo de nuevo"
+  }
+}

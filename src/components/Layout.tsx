@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Bell, User, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Badge } from "@/components/ui/badge";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -28,6 +29,7 @@ export function Layout({ children }: LayoutProps) {
             </div>
 
             <div className="flex items-center gap-4">
+              <LanguageSwitcher />
               {profile && (
                 <div className="flex items-center gap-2">
                   <span className="text-sm font-medium">{profile.name}</span>
