@@ -13,10 +13,12 @@ import { useApp } from "../contexts/AppContext";
 import { formatCurrency, parseCurrency } from "../utils/currency";
 import { generateQuotePDF } from "../utils/pdf";
 import { useToast } from "@/hooks/use-toast";
-import { Quote, QuoteStatus } from "../types";
+import { Quote, QuoteStatus, Collect } from "../types";
+import { collectsService } from "../services/collectsService";
+import { quotesService } from "../services/quotesService";
 
 export function QuoteBuilder() {
-  const { state, updateQuote, addQuoteItem, updateQuoteItem, removeQuoteItem, addCustomer, addCollect } = useApp();
+  const { state, updateQuote, addQuoteItem, updateQuoteItem, removeQuoteItem, addCustomer } = useApp();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -44,7 +46,30 @@ export function QuoteBuilder() {
   const quote = state.quotes.find(q => q.id === quoteId);
   const userProducts = state.products.filter(p => p.userId === state.currentUser.id);
   const userCustomers = state.customers.filter(c => c.userId === state.currentUser.id);
-  const quoteCollects = state.collects?.filter(c => c.quoteId === quoteId) || [];
+  const [quoteCollects, setQuoteCollects] = useState<Collect[]>([]);
+
+  // Load collects when component mounts or quoteId changes
+  useEffect(() => {
+    if (quoteId) {
+      loadCollects();
+    }
+  }, [quoteId]);
+
+  const loadCollects = async () => {
+    try {
+      if (quoteId) {
+        const collects = await collectsService.getCollectsByQuote(quoteId);
+        setQuoteCollects(collects);
+      }
+    } catch (error) {
+      console.error('Error loading collects:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load payment records",
+        variant: "destructive"
+      });
+    }
+  };
 
   useEffect(() => {
     if (!quote) {
@@ -152,7 +177,7 @@ export function QuoteBuilder() {
     });
   };
 
-  const handleAddCollect = () => {
+  const handleAddCollect = async () => {
     const amount = parseCurrency(newCollect.amount);
     const remainingBalance = quote.total - quote.totalPaid;
     
@@ -182,28 +207,43 @@ export function QuoteBuilder() {
       });
       return;
     }
-    
-    // Add the collect record to the database
-    addCollect({
-      quoteId: quote.id,
-      userId: state.currentUser.id,
-      amount,
-      paymentMethod: newCollect.paymentMethod,
-      notes: newCollect.notes || undefined,
-      collectedAt: new Date()
-    });
-    
-    // Update the quote's total paid amount
-    const newTotalPaid = quote.totalPaid + amount;
-    updateQuote(quote.id, { totalPaid: newTotalPaid });
-    
-    setNewCollect({ amount: "", paymentMethod: "", notes: "" });
-    setIsAddCollectDialogOpen(false);
-    
-    toast({
-      title: "Success",
-      description: "Payment recorded successfully"
-    });
+
+    try {
+      // Add the collect record to Supabase
+      await collectsService.addCollect({
+        quoteId: quote.id,
+        userId: state.currentUser.id,
+        amount,
+        paymentMethod: newCollect.paymentMethod,
+        notes: newCollect.notes || undefined,
+        collectedAt: new Date()
+      });
+      
+      // Update the quote's total paid amount in Supabase
+      const newTotalPaid = quote.totalPaid + amount;
+      await quotesService.updateQuote(quote.id, { totalPaid: newTotalPaid });
+      
+      // Update local state
+      updateQuote(quote.id, { totalPaid: newTotalPaid });
+      
+      // Reload collects to show the new payment
+      await loadCollects();
+      
+      setNewCollect({ amount: "", paymentMethod: "", notes: "" });
+      setIsAddCollectDialogOpen(false);
+      
+      toast({
+        title: "Success",
+        description: "Payment recorded successfully"
+      });
+    } catch (error) {
+      console.error('Error recording payment:', error);
+      toast({
+        title: "Error",
+        description: "Failed to record payment. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleDownloadPDF = () => {
