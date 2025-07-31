@@ -378,7 +378,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             createdAt: new Date(q.createdAt),
             updatedAt: new Date(q.updatedAt)
           })),
-          collects: parsedState.collects || []
+          collects: parsedState.collects?.map((c: any) => ({
+            ...c,
+            collectedAt: new Date(c.collectedAt),
+            createdAt: new Date(c.createdAt),
+            updatedAt: new Date(c.updatedAt)
+          })) || []
         };
         dispatch({ type: 'LOAD_STATE', payload: normalizedState });
       } catch (error) {
