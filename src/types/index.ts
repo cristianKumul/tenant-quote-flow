@@ -64,6 +64,7 @@ export interface Quote {
   items: QuoteItem[];
   subtotal: number;
   total: number;
+  totalPaid: number;
   notes?: string;
   createdAt: Date;
   updatedAt: Date;

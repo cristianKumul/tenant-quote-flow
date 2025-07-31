@@ -143,6 +143,7 @@ const generateMockData = (): AppState => {
       ],
       subtotal: 2500,
       total: 2500,
+      totalPaid: 0,
       createdAt: new Date('2024-01-15'),
       updatedAt: new Date('2024-01-15')
     }
@@ -413,6 +414,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         items: [],
         subtotal: 0,
         total: 0,
+        totalPaid: 0,
         createdAt: new Date(),
         updatedAt: new Date()
       };

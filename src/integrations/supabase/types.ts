@@ -209,6 +209,7 @@ export type Database = {
           status: string
           subtotal: number
           total: number
+          total_paid: number
           updated_at: string
           user_id: string
         }
@@ -221,6 +222,7 @@ export type Database = {
           status?: string
           subtotal?: number
           total?: number
+          total_paid?: number
           updated_at?: string
           user_id: string
         }
@@ -233,6 +235,7 @@ export type Database = {
           status?: string
           subtotal?: number
           total?: number
+          total_paid?: number
           updated_at?: string
           user_id?: string
         }

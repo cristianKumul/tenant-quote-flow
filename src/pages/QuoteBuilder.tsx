@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Plus, Trash2, Download, Save, Package, User } from "lucide-react";
+import { Plus, Trash2, Download, Save, Package, User, DollarSign } from "lucide-react";
 import { useApp } from "../contexts/AppContext";
 import { formatCurrency, parseCurrency } from "../utils/currency";
 import { generateQuotePDF } from "../utils/pdf";
@@ -27,6 +27,7 @@ export function QuoteBuilder() {
   const [customPrice, setCustomPrice] = useState("");
   const [isAddProductDialogOpen, setIsAddProductDialogOpen] = useState(false);
   const [isAddCustomerDialogOpen, setIsAddCustomerDialogOpen] = useState(false);
+  const [isAddCollectDialogOpen, setIsAddCollectDialogOpen] = useState(false);
   const [newCustomer, setNewCustomer] = useState({
     name: "",
     email: "",
@@ -34,10 +35,16 @@ export function QuoteBuilder() {
     phone: "",
     address: ""
   });
+  const [newCollect, setNewCollect] = useState({
+    amount: "",
+    paymentMethod: "",
+    notes: ""
+  });
 
   const quote = state.quotes.find(q => q.id === quoteId);
   const userProducts = state.products.filter(p => p.userId === state.currentUser.id);
   const userCustomers = state.customers.filter(c => c.userId === state.currentUser.id);
+  const quoteCollects = state.collects.filter(c => c.quoteId === quoteId);
 
   useEffect(() => {
     if (!quote) {
@@ -142,6 +149,51 @@ export function QuoteBuilder() {
     toast({
       title: "Success",
       description: "Customer added successfully"
+    });
+  };
+
+  const handleAddCollect = () => {
+    const amount = parseCurrency(newCollect.amount);
+    const remainingBalance = quote.total - quote.totalPaid;
+    
+    if (amount <= 0) {
+      toast({
+        title: "Error",
+        description: "Amount must be greater than 0",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (amount > remainingBalance) {
+      toast({
+        title: "Error", 
+        description: `Amount cannot exceed remaining balance of ${formatCurrency(remainingBalance)}`,
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (!newCollect.paymentMethod) {
+      toast({
+        title: "Error",
+        description: "Payment method is required",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Here you would add the collect to the database
+    // For now, we'll just show a success message
+    const newTotalPaid = quote.totalPaid + amount;
+    updateQuote(quote.id, { totalPaid: newTotalPaid });
+    
+    setNewCollect({ amount: "", paymentMethod: "", notes: "" });
+    setIsAddCollectDialogOpen(false);
+    
+    toast({
+      title: "Success",
+      description: "Payment recorded successfully"
     });
   };
 
@@ -433,6 +485,46 @@ export function QuoteBuilder() {
               </div>
             </CardContent>
           </Card>
+
+          {/* Payments History */}
+          {quoteCollects.length > 0 && (
+            <Card className="shadow-card">
+              <CardHeader>
+                <CardTitle>Payment History</CardTitle>
+                <CardDescription>Record of partial payments received for this quote</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {quoteCollects.map((collect) => (
+                    <div key={collect.id} className="flex items-center gap-4 p-4 border border-border rounded-lg">
+                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        <DollarSign className="w-5 h-5 text-green-600" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="font-medium">{formatCurrency(collect.amount)}</p>
+                            <p className="text-sm text-muted-foreground capitalize">{collect.paymentMethod}</p>
+                            {collect.notes && (
+                              <p className="text-sm text-muted-foreground mt-1">{collect.notes}</p>
+                            )}
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm text-muted-foreground">
+                              {new Date(collect.collectedAt).toLocaleDateString()}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {new Date(collect.collectedAt).toLocaleTimeString()}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Quote Summary */}
@@ -454,11 +546,85 @@ export function QuoteBuilder() {
                   <span className="text-sm text-muted-foreground">Subtotal:</span>
                   <span className="font-medium">{formatCurrency(quote.subtotal)}</span>
                 </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Total Paid:</span>
+                  <span className="font-medium text-green-600">{formatCurrency(quote.totalPaid)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-muted-foreground">Remaining:</span>
+                  <span className="font-medium text-orange-600">{formatCurrency(quote.total - quote.totalPaid)}</span>
+                </div>
                 <div className="flex justify-between border-t pt-2">
                   <span className="font-medium">Total:</span>
                   <span className="text-lg font-bold">{formatCurrency(quote.total)}</span>
                 </div>
               </div>
+              
+              {quote.total - quote.totalPaid > 0 && (
+                <Dialog open={isAddCollectDialogOpen} onOpenChange={setIsAddCollectDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="w-full">
+                      <DollarSign className="w-4 h-4" />
+                      Record Payment
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Record Partial Payment</DialogTitle>
+                      <DialogDescription>
+                        Record a partial payment for this quote. Remaining balance: {formatCurrency(quote.total - quote.totalPaid)}
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="collectAmount">Amount *</Label>
+                        <Input
+                          id="collectAmount"
+                          type="number"
+                          step="0.01"
+                          min="0.01"
+                          max={quote.total - quote.totalPaid}
+                          value={newCollect.amount}
+                          onChange={(e) => setNewCollect(prev => ({ ...prev, amount: e.target.value }))}
+                          placeholder="Enter payment amount"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="paymentMethod">Payment Method *</Label>
+                        <Select value={newCollect.paymentMethod} onValueChange={(value) => setNewCollect(prev => ({ ...prev, paymentMethod: value }))}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select payment method" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="cash">Cash</SelectItem>
+                            <SelectItem value="transfer">Bank Transfer</SelectItem>
+                            <SelectItem value="check">Check</SelectItem>
+                            <SelectItem value="card">Credit/Debit Card</SelectItem>
+                            <SelectItem value="paypal">PayPal</SelectItem>
+                            <SelectItem value="other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="collectNotes">Notes (optional)</Label>
+                        <Textarea
+                          id="collectNotes"
+                          value={newCollect.notes}
+                          onChange={(e) => setNewCollect(prev => ({ ...prev, notes: e.target.value }))}
+                          placeholder="Add any notes about this payment..."
+                          rows={3}
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button variant="outline" onClick={() => setIsAddCollectDialogOpen(false)}>
+                        Cancel
+                      </Button>
+                      <Button onClick={handleAddCollect}>Record Payment</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              )}
 
               <div className="space-y-2">
                 <div className="text-sm text-muted-foreground">
