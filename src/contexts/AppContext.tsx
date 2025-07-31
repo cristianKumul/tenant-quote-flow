@@ -143,9 +143,34 @@ const generateMockData = (): AppState => {
       ],
       subtotal: 2500,
       total: 2500,
-      totalPaid: 0,
+      totalPaid: 1750,
       createdAt: new Date('2024-01-15'),
       updatedAt: new Date('2024-01-15')
+    }
+  ];
+
+  const collects = [
+    {
+      id: 'collect1',
+      quoteId: 'quote1',
+      userId: 'user1',
+      amount: 1000,
+      paymentMethod: 'Bank Transfer',
+      notes: 'Initial payment received via wire transfer',
+      collectedAt: new Date('2024-01-16'),
+      createdAt: new Date('2024-01-16'),
+      updatedAt: new Date('2024-01-16')
+    },
+    {
+      id: 'collect2', 
+      quoteId: 'quote1',
+      userId: 'user1',
+      amount: 750,
+      paymentMethod: 'Cash',
+      notes: 'Partial payment in cash',
+      collectedAt: new Date('2024-01-20'),
+      createdAt: new Date('2024-01-20'),
+      updatedAt: new Date('2024-01-20')
     }
   ];
 
@@ -155,7 +180,7 @@ const generateMockData = (): AppState => {
     products,
     customers,
     quotes,
-    collects: []
+    collects
   };
 };
 
