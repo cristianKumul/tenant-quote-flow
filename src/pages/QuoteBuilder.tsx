@@ -59,8 +59,9 @@ export function QuoteBuilder() {
       
       if (!existingQuote) {
         // Create the quote in Supabase if it doesn't exist
+        // Use the current authenticated user ID instead of quote.userId
         await quotesService.createQuote({
-          userId: quote.userId,
+          userId: state.currentUser.id,
           quoteNumber: quote.quoteNumber,
           status: quote.status,
           customerId: quote.customerId,
