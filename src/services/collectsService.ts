@@ -54,7 +54,7 @@ export const collectsService = {
   },
 
   // Add a new collect record
-  async addCollect(collectData: Omit<Collect, 'id' | 'createdAt' | 'updatedAt'>): Promise<Collect> {
+  async addCollect(collectData: Omit<Collect, 'id' | 'userId' | 'createdAt' | 'updatedAt'>): Promise<Collect> {
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) {

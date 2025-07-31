@@ -257,7 +257,6 @@ export function QuoteBuilder() {
       // Add the collect record to Supabase
       await collectsService.addCollect({
         quoteId: quote.id,
-        userId: state.currentUser.id,
         amount,
         paymentMethod: newCollect.paymentMethod,
         notes: newCollect.notes || undefined,
