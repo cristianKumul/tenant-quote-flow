@@ -10,10 +10,54 @@ export type Database = {
   // Allows to automatically instanciate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "12.2.3 (519615d)"
+    PostgrestVersion: "12.2.12 (cd3cf9e)"
   }
   public: {
     Tables: {
+      collects: {
+        Row: {
+          amount: number
+          collected_at: string
+          created_at: string
+          id: string
+          notes: string | null
+          payment_method: string
+          quote_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          collected_at?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_method: string
+          quote_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          collected_at?: string
+          created_at?: string
+          id?: string
+          notes?: string | null
+          payment_method?: string
+          quote_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_collects_quote_id"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       customers: {
         Row: {
           company: string | null

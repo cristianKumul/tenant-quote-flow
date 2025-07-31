@@ -42,6 +42,18 @@ export interface QuoteItem {
   totalPrice: number;
 }
 
+export interface Collect {
+  id: string;
+  quoteId: string;
+  userId: string;
+  amount: number;
+  paymentMethod: string;
+  notes?: string;
+  collectedAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface Quote {
   id: string;
   userId: string;
@@ -63,4 +75,5 @@ export interface AppState {
   products: Product[];
   customers: Customer[];
   quotes: Quote[];
+  collects: Collect[];
 }

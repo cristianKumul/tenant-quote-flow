@@ -153,7 +153,8 @@ const generateMockData = (): AppState => {
     users,
     products,
     customers,
-    quotes
+    quotes,
+    collects: []
   };
 };
 
