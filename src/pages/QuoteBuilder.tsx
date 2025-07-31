@@ -251,6 +251,9 @@ export function QuoteBuilder() {
     }
 
     try {
+      // Ensure quote exists in Supabase first
+      await ensureQuoteInSupabase();
+      
       // Add the collect record to Supabase
       await collectsService.addCollect({
         quoteId: quote.id,
