@@ -44,7 +44,7 @@ export function QuoteBuilder() {
   const quote = state.quotes.find(q => q.id === quoteId);
   const userProducts = state.products.filter(p => p.userId === state.currentUser.id);
   const userCustomers = state.customers.filter(c => c.userId === state.currentUser.id);
-  const quoteCollects = state.collects.filter(c => c.quoteId === quoteId);
+  const quoteCollects = state.collects?.filter(c => c.quoteId === quoteId) || [];
 
   useEffect(() => {
     if (!quote) {

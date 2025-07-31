@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { AppState, User, Product, Customer, Quote, QuoteItem, QuoteStatus } from '../types';
+import { AppState, User, Product, Customer, Quote, QuoteItem, QuoteStatus, Collect } from '../types';
 
 interface AppContextType {
   state: AppState;
@@ -342,7 +342,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             ...q, 
             createdAt: new Date(q.createdAt),
             updatedAt: new Date(q.updatedAt)
-          }))
+          })),
+          collects: parsedState.collects || []
         };
         dispatch({ type: 'LOAD_STATE', payload: normalizedState });
       } catch (error) {
