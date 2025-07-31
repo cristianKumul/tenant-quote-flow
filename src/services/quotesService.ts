@@ -70,5 +70,45 @@ export const quotesService = {
       createdAt: new Date(data.created_at),
       updatedAt: new Date(data.updated_at)
     };
+  },
+
+  // Create a new quote
+  async createQuote(quoteData: Omit<Quote, 'id' | 'createdAt' | 'updatedAt'>): Promise<Quote> {
+    const { data, error } = await supabase
+      .from('quotes')
+      .insert({
+        user_id: quoteData.userId,
+        quote_number: quoteData.quoteNumber,
+        status: quoteData.status,
+        customer_id: quoteData.customerId,
+        customer_name: quoteData.customerName,
+        subtotal: quoteData.subtotal,
+        total: quoteData.total,
+        total_paid: quoteData.totalPaid,
+        notes: quoteData.notes
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating quote:', error);
+      throw new Error('Failed to create quote');
+    }
+
+    return {
+      id: data.id,
+      userId: data.user_id,
+      quoteNumber: data.quote_number,
+      status: data.status as QuoteStatus,
+      customerId: data.customer_id || undefined,
+      customerName: data.customer_name || undefined,
+      items: [], // Quote items will be loaded separately
+      subtotal: Number(data.subtotal),
+      total: Number(data.total),
+      totalPaid: Number(data.total_paid || 0),
+      notes: (data as any).notes || undefined,
+      createdAt: new Date(data.created_at),
+      updatedAt: new Date(data.updated_at)
+    };
   }
 };

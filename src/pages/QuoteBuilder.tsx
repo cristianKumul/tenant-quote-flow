@@ -48,12 +48,43 @@ export function QuoteBuilder() {
   const userCustomers = state.customers.filter(c => c.userId === state.currentUser.id);
   const [quoteCollects, setQuoteCollects] = useState<Collect[]>([]);
 
+  // Ensure quote exists in Supabase database
+  const ensureQuoteInSupabase = async () => {
+    if (!quote) return;
+    
+    try {
+      // Try to get the quote from Supabase
+      const quotes = await quotesService.getQuotes();
+      const existingQuote = quotes.find(q => q.id === quote.id);
+      
+      if (!existingQuote) {
+        // Create the quote in Supabase if it doesn't exist
+        await quotesService.createQuote({
+          userId: quote.userId,
+          quoteNumber: quote.quoteNumber,
+          status: quote.status,
+          customerId: quote.customerId,
+          customerName: quote.customerName,
+          items: quote.items,
+          subtotal: quote.subtotal,
+          total: quote.total,
+          totalPaid: quote.totalPaid,
+          notes: quote.notes
+        });
+      }
+    } catch (error) {
+      console.error('Error ensuring quote exists in Supabase:', error);
+    }
+  };
+
   // Load collects when component mounts or quoteId changes
   useEffect(() => {
-    if (quoteId) {
-      loadCollects();
+    if (quoteId && quote) {
+      ensureQuoteInSupabase().then(() => {
+        loadCollects();
+      });
     }
-  }, [quoteId]);
+  }, [quoteId, quote]);
 
   const loadCollects = async () => {
     try {
@@ -81,12 +112,22 @@ export function QuoteBuilder() {
     return null;
   }
 
-  const handleStatusChange = (status: QuoteStatus) => {
-    updateQuote(quote.id, { status });
-    toast({
-      title: "Success",
-      description: `Quote status updated to ${status}`
-    });
+  const handleStatusChange = async (status: QuoteStatus) => {
+    try {
+      await quotesService.updateQuote(quote.id, { status });
+      updateQuote(quote.id, { status });
+      toast({
+        title: "Success",
+        description: `Quote status updated to ${status}`
+      });
+    } catch (error) {
+      console.error('Error updating quote status:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update quote status",
+        variant: "destructive"
+      });
+    }
   };
 
   const handleCustomerChange = (customerId: string) => {
