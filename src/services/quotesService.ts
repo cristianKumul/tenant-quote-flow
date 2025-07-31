@@ -25,7 +25,7 @@ export const quotesService = {
       subtotal: Number(quote.subtotal),
       total: Number(quote.total),
       totalPaid: Number(quote.total_paid || 0),
-      notes: quote.notes || undefined,
+      notes: (quote as any).notes || undefined,
       createdAt: new Date(quote.created_at),
       updatedAt: new Date(quote.updated_at)
     }));
@@ -66,7 +66,7 @@ export const quotesService = {
       subtotal: Number(data.subtotal),
       total: Number(data.total),
       totalPaid: Number(data.total_paid || 0),
-      notes: data.notes || undefined,
+      notes: (data as any).notes || undefined,
       createdAt: new Date(data.created_at),
       updatedAt: new Date(data.updated_at)
     };
