@@ -25,6 +25,9 @@ interface AppContextType {
   updateQuoteItem: (quoteId: string, itemId: string, updates: Partial<QuoteItem>) => void;
   removeQuoteItem: (quoteId: string, itemId: string) => void;
   deleteQuote: (id: string) => void;
+  
+  // Collect actions
+  addCollect: (collect: Omit<Collect, 'id' | 'createdAt' | 'updatedAt'>) => void;
 }
 
 type AppAction = 
@@ -42,6 +45,7 @@ type AppAction =
   | { type: 'UPDATE_QUOTE_ITEM'; payload: { quoteId: string; itemId: string; updates: Partial<QuoteItem> } }
   | { type: 'REMOVE_QUOTE_ITEM'; payload: { quoteId: string; itemId: string } }
   | { type: 'DELETE_QUOTE'; payload: string }
+  | { type: 'ADD_COLLECT'; payload: Collect }
   | { type: 'LOAD_STATE'; payload: AppState };
 
 // Mock data for demo
@@ -337,6 +341,12 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
         quotes: state.quotes.filter(quote => quote.id !== action.payload)
       };
       
+    case 'ADD_COLLECT':
+      return {
+        ...state,
+        collects: [...state.collects, action.payload]
+      };
+      
     default:
       return state;
   }
@@ -480,6 +490,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     
     deleteQuote: (id: string) => {
       dispatch({ type: 'DELETE_QUOTE', payload: id });
+    },
+    
+    addCollect: (collectData) => {
+      const collect: Collect = {
+        ...collectData,
+        id: uuidv4(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      };
+      dispatch({ type: 'ADD_COLLECT', payload: collect });
     }
   };
 

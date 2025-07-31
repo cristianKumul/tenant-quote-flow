@@ -16,7 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Quote, QuoteStatus } from "../types";
 
 export function QuoteBuilder() {
-  const { state, updateQuote, addQuoteItem, updateQuoteItem, removeQuoteItem, addCustomer } = useApp();
+  const { state, updateQuote, addQuoteItem, updateQuoteItem, removeQuoteItem, addCustomer, addCollect } = useApp();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -183,8 +183,17 @@ export function QuoteBuilder() {
       return;
     }
     
-    // Here you would add the collect to the database
-    // For now, we'll just show a success message
+    // Add the collect record to the database
+    addCollect({
+      quoteId: quote.id,
+      userId: state.currentUser.id,
+      amount,
+      paymentMethod: newCollect.paymentMethod,
+      notes: newCollect.notes || undefined,
+      collectedAt: new Date()
+    });
+    
+    // Update the quote's total paid amount
     const newTotalPaid = quote.totalPaid + amount;
     updateQuote(quote.id, { totalPaid: newTotalPaid });
     
