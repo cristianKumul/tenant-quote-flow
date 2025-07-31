@@ -487,13 +487,13 @@ export function QuoteBuilder() {
           </Card>
 
           {/* Payments History */}
-          {quoteCollects.length > 0 && (
-            <Card className="shadow-card">
-              <CardHeader>
-                <CardTitle>Payment History</CardTitle>
-                <CardDescription>Record of partial payments received for this quote</CardDescription>
-              </CardHeader>
-              <CardContent>
+          <Card className="shadow-card">
+            <CardHeader>
+              <CardTitle>Payment History</CardTitle>
+              <CardDescription>Record of partial payments received for this quote</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {quoteCollects.length > 0 ? (
                 <div className="space-y-4">
                   {quoteCollects.map((collect) => (
                     <div key={collect.id} className="flex items-center gap-4 p-4 border border-border rounded-lg">
@@ -522,9 +522,13 @@ export function QuoteBuilder() {
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  No payments recorded yet.
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </div>
 
         {/* Quote Summary */}
